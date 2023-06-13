@@ -22,19 +22,21 @@ const createFiltersTemplate = () => (
 );
 
 export default class FiltersView {
+  #element = null;
+
   getTemplate() {
     return createFiltersTemplate();
   }
 
   getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+    if (!this.#element) {
+      this.#element = createElement(this.getTemplate());
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

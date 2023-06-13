@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const RenderPosition = {
   BEFOREBEGIN: 'beforebegin',
   BEFOREEND: 'beforeend',
@@ -7,7 +6,7 @@ const RenderPosition = {
 };
 
 const renderTemplate = (container, component, position) => {
-  container.insertAdjacentHTML(position, component.getElement());
+  container.insertAdjacentHTML(position, component.element);
 };
 
 const createElement = (template) => {
