@@ -1,7 +1,13 @@
-import { generateWaypoints } from '../utils/waypoints';
-
 export default class WaypointsModel {
-  waypoints = generateWaypoints(10);
+  constructor() {
+    this.waypoints = [];
+  }
 
-  getWaypoints = () => this.waypoints;
-};
+  init(points) {
+    this.waypoints = points;
+  }
+
+  getWaypoints() {
+    return this.waypoints;
+  }
+}

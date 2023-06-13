@@ -29,21 +29,34 @@ const destinationsList = [
       'cityName': 'Amsterdam',
       'photos': ['http://picsum.photos/248/152?r=15']
     }
+  },
+  {
+    'id': 1,
+    'description': 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
+    'name': 'Chamonix',
+    'pictures': [
+      {
+        'src': 'http://picsum.photos/248/152?r=1',
+        'description': 'Chamonix parliament building'
+      }
+    ]
   }
 ];
 
-const someOffer = offersList.find((offer) => offer.type === this.type);
+const someOffer = offersList.find((offer) => offer.type === this.type).offers;
 const someDestination = destinationsList.find((destination) => destination.id === 1);
 
 export const generateWaypoint = () => ({
   'type': 'Taxi',
-  'destination': {
-    someOffer
-  },
+  'price': 100,
   'startDate': '25/12/19 16:00',
   'endDate': '25/12/19 18:00',
-  'price': 100,
-  'offers': {
+  'isFavourite': false,
+  'destination': {
     someDestination
-  }
+  },
+  'offers': {
+    someOffer
+  },
+
 });
