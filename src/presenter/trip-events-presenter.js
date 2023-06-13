@@ -1,21 +1,75 @@
 import { RenderPosition, renderTemplate } from './render';
 import SortView from '../view/sort';
-import TripEventList from '../view/trip-event-list';
-import TripPoint from '../view/trip-point';
+import TripEventListView from '../view/trip-event-list';
+import TripPointView from '../view/trip-point';
 import PointEditingView from '../view/point-editing';
-import PointCreationView from '../view/point-creation';
 
 export default class EventsPresenter {
-  init(eventsContainer) {
-    this.EventsContainer = eventsContainer;
+  #waypointsList = null;
+  #tripContainer = null;
+  #waypointsModel = null;
+  #boardPoints = null;
+  #destinations = null;
+  #offers = null;
 
-    renderTemplate(new SortView(), this.EventsContainer, RenderPosition.BEFOREEND);
-    renderTemplate(new TripEventList(), this.EventsContainer, RenderPosition.BEFOREEND);
-    renderTemplate(new PointCreationView(), this.EventsContainer, RenderPosition.BEFOREEND);
-    renderTemplate(new PointEditingView(), this.EventsContainer, RenderPosition.AFTERBEGIN);
+  constructor(tripContainer) {
+    this.eventsList = new TripEventListView();
+    this.tripContainer = tripContainer;
+    this.#waypointsList = new TripPointView();
+    this.#tripContainer = tripContainer;
+  }
 
-    for (let i = 0; i < 3; i++) {
-      renderTemplate(new TripPoint(), this.EventsContainer, RenderPosition.BEFOREEND);
+  init(waypointsModel) {
+    this.#waypointsModel = waypointsModel;
+    this.#boardPoints = [...this.#waypointsModel.points];
+    this.#destinations = [...this.#waypointsModel.destinations];
+    this.#offers = [...this.#waypointsModel.offers];
+
+    renderTemplate(new SortView(), this.#tripContainer, RenderPosition.BEFOREEND);
+    renderTemplate(this.#waypointsList, this.#tripContainer, RenderPosition.BEFOREEND);
+
+    for (const point of this.#boardPoints){
+      this.#renderPoint(point);
     }
   }
+
+  #renderPoint = (point) => {
+    const pointComponent = new TripPointView(point, this.#destinations, this.#offers);
+    const pointEditComponent = new PointEditingView(point, this.#destinations, this.#offers);
+
+    const replacePointToEditForm = () => {
+      this.#waypointsList.element.replaceChild(pointEditComponent.element, pointComponent.element);
+    };
+
+    const replaceEditFormToPoint = () => {
+      this.#waypointsList.element.replaceChild(pointComponent.element, pointEditComponent.element);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceEditFormToPoint();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replacePointToEditForm();
+      document.addEventListener('keydown', onEscKeyDown);
+    });
+
+    pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
+      evt.preventDefault();
+      replaceEditFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    pointEditComponent.element.querySelector('form').addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      replaceEditFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    renderTemplate(pointComponent, this.#waypointsList.element, RenderPosition.AFTERBEGIN);
+  };
 }
