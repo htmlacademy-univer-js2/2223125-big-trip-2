@@ -1,4 +1,4 @@
-import { RenderPosition, renderTemplate } from './render';
+import { RenderPosition, render, replace } from '../framework/render';
 import SortView from '../view/sort';
 import TripEventListView from '../view/trip-event-list';
 import TripPointView from '../view/trip-point';
@@ -22,11 +22,11 @@ export default class EventsPresenter {
     this.#waypointsModel = waypointsModel;
     this.#boardPoints = [...this.#waypointsModel.waypoints];
     if (this.#boardPoints.length === 0) {
-      renderTemplate(this.#tripContainer, new EmptyListView(), RenderPosition.BEFOREEND);
+      render(new EmptyListView(), this.#tripContainer, RenderPosition.BEFOREEND);
     }
     else {
-      renderTemplate(this.#tripContainer, new SortView(), RenderPosition.BEFOREEND);
-      renderTemplate(this.#tripContainer, this.#waypointsList, RenderPosition.BEFOREEND);
+      render(new SortView(), this.#tripContainer, RenderPosition.BEFOREEND);
+      render(this.#waypointsList, this.#tripContainer, RenderPosition.BEFOREEND);
 
       for (const point of this.#boardPoints){
         this.#renderPoint(point);
@@ -36,41 +36,39 @@ export default class EventsPresenter {
 
   #renderPoint = (point) => {
     const pointComponent = new TripPointView(point);
-    const pointEditComponent = new PointEditingView(point);
+    const pointEditingComponent = new PointEditingView(point);
 
-    const replacePointToEditForm = () => {
-      this.#waypointsList.element.replaceChild(pointEditComponent.element, pointComponent.element);
+    const replacePreviewPointToEditingPoint = () => {
+      replace(pointEditingComponent, pointComponent);
     };
 
-    const replaceEditFormToPoint = () => {
-      this.#waypointsList.element.replaceChild(pointComponent.element, pointEditComponent.element);
+    const replaceEditingPointToPreviewPoint = () => {
+      replace(pointComponent, pointEditingComponent);
     };
 
     const onEscKeyDown = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
         evt.preventDefault();
-        replaceEditFormToPoint();
+        replaceEditingPointToPreviewPoint();
         document.removeEventListener('keydown', onEscKeyDown);
       }
     };
 
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
-      replacePointToEditForm();
+    pointComponent.setEditClickHandler(() => {
+      replacePreviewPointToEditingPoint();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    pointEditComponent.element.querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
-      evt.preventDefault();
-      replaceEditFormToPoint();
+    pointEditingComponent.setPreviewClickHandler(() => {
+      replaceEditingPointToPreviewPoint();
       document.removeEventListener('keydown', onEscKeyDown);
     });
 
-    pointEditComponent.element.querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      replaceEditFormToPoint();
+    pointEditingComponent.setFormSubmitHandler(() => {
+      replaceEditingPointToPreviewPoint();
       document.removeEventListener('keydown', onEscKeyDown);
     });
 
-    renderTemplate(pointComponent, this.#waypointsList.element, RenderPosition.AFTERBEGIN);
+    render(pointComponent, this.#waypointsList.element, RenderPosition.AFTERBEGIN);
   };
 }

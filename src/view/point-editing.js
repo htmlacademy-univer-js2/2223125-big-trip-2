@@ -1,4 +1,4 @@
-import { createElement } from '../presenter/render';
+import AbstractView from '../framework/view/abstract-view';
 import { getTime } from '../utils/waypoints';
 
 const renderDestinationPictures = (pictures) => {
@@ -130,11 +130,11 @@ const createPointEditingTemplate = (waypoint) => {
   );
 };
 
-export default class PointEditingView {
-  #element = null;
+export default class PointEditingView extends AbstractView {
   #waypoint = null;
 
   constructor(waypoint) {
+    super();
     this.#waypoint = waypoint;
   }
 
@@ -142,15 +142,23 @@ export default class PointEditingView {
     return createPointEditingTemplate(this.#waypoint);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setPreviewClickHandler = (callback) => {
+    this._callback.previewClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#previewClickHandler);
+  };
 
-    return this.#element;
-  }
+  #previewClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.previewClick();
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('click', this.#formSubmitHandler);
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  };
 }
