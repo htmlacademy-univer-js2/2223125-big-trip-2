@@ -44,4 +44,18 @@ const isPointDateFuture = (date) => date.diff(dayjs(), 'day') >= 0;
 
 const isPointDateFuturePast = (dateFrom, dateTo) => dayjs().diff(dateFrom, 'day') > 0 && dateTo.diff(dayjs(), 'day') > 0;
 
-export { generateWaypoints, humanizePointDueDate, calculateDuration, renderOffers, getDate, getTime, isPointDatePast, isPointDateFuture, isPointDateFuturePast};
+const updateItem = (items, update) => {
+  const index = items.findIndex((item) => item.id === update.id);
+
+  if (index === -1) {
+    return items;
+  }
+
+  return [
+    ...items.slice(0, index),
+    update,
+    ...items.slice(index + 1),
+  ];
+};
+
+export { generateWaypoints, humanizePointDueDate, calculateDuration, renderOffers, getDate, getTime, isPointDatePast, isPointDateFuture, isPointDateFuturePast, updateItem};

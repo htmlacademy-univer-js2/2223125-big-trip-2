@@ -1,19 +1,19 @@
-import MenuView from './view/menu';
-import FiltersView from './view/filters';
-import EventsPresenter from './presenter/trip-events-presenter.js';
+import MenuView from './view/menu.js';
+import FiltersView from './view/filters.js';
+import BoardPresenter from './presenter/board-presenter.js';
 import WaypointsModel from './model/waypoints-model';
 import { RenderPosition, render } from './framework/render.js';
-import { generateWaypoints } from './utils/waypoints';
-import { generateFilter } from './mock/filter';
+import { generateWaypoints } from './utils/waypoints.js';
+import { generateFilter } from './mock/filter.js';
 
 const menuElement = document.querySelector('.trip-controls__navigation');
 const filterElement = document.querySelector('.trip-controls__filters');
-const tripPresenter = new EventsPresenter(document.querySelector('.trip-events'));
 
-const waypoints = generateWaypoints();
+const waypoints = generateWaypoints(5);
 const waypointsModel = new WaypointsModel();
 waypointsModel.init(waypoints);
-tripPresenter.init(waypointsModel);
+const boardPresenter = new BoardPresenter(document.querySelector('.trip-events'), waypointsModel);
+boardPresenter.init();
 
 const filters = generateFilter(waypointsModel.waypoints);
 
