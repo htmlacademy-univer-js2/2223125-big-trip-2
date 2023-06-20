@@ -1,9 +1,9 @@
-import { isPointDateFuture, isPointDatePast, isPointDateFuturePast } from './point-date.js';
+import { isPointDateFuture, isPointDatePast, isPointDateFuturePast } from './waypoints.js';
 
 const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
-  PAST: 'past'
+  PAST: 'past',
 };
 
 const filter = {
