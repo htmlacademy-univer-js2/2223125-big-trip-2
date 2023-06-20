@@ -9,7 +9,7 @@ export default class WaypointsModel {
     this.#waypoints = waypoints;
   }
 
-  getWaypoints() {
+  get waypoints() {
     return this.#waypoints;
   }
 }

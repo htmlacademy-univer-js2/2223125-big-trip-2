@@ -6,13 +6,12 @@ const RenderPosition = {
 };
 
 const renderTemplate = (container, component, position) => {
-  container.insertAdjacentHTML(position, component.element);
+  container.insertAdjacentElement(position, component.element);
 };
 
 const createElement = (template) => {
   const newElement = document.createElement('div');
   newElement.innerHTML = template;
-
   return newElement.firstElementChild;
 };
 

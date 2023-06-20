@@ -3,14 +3,13 @@ import SortView from '../view/sort';
 import TripEventListView from '../view/trip-event-list';
 import TripPointView from '../view/trip-point';
 import PointEditingView from '../view/point-editing';
+import EmptyListView from '../view/empty-point-list';
 
 export default class EventsPresenter {
   #waypointsList = null;
   #tripContainer = null;
   #waypointsModel = null;
   #boardPoints = null;
-  #destinations = null;
-  #offers = null;
 
   constructor(tripContainer) {
     this.eventsList = new TripEventListView();
@@ -21,21 +20,23 @@ export default class EventsPresenter {
 
   init(waypointsModel) {
     this.#waypointsModel = waypointsModel;
-    this.#boardPoints = [...this.#waypointsModel.points];
-    this.#destinations = [...this.#waypointsModel.destinations];
-    this.#offers = [...this.#waypointsModel.offers];
+    this.#boardPoints = [...this.#waypointsModel.waypoints];
+    if (this.#boardPoints.length === 0) {
+      renderTemplate(this.#tripContainer, new EmptyListView(), RenderPosition.BEFOREEND);
+    }
+    else {
+      renderTemplate(this.#tripContainer, new SortView(), RenderPosition.BEFOREEND);
+      renderTemplate(this.#tripContainer, this.#waypointsList, RenderPosition.BEFOREEND);
 
-    renderTemplate(new SortView(), this.#tripContainer, RenderPosition.BEFOREEND);
-    renderTemplate(this.#waypointsList, this.#tripContainer, RenderPosition.BEFOREEND);
-
-    for (const point of this.#boardPoints){
-      this.#renderPoint(point);
+      for (const point of this.#boardPoints){
+        this.#renderPoint(point);
+      }
     }
   }
 
   #renderPoint = (point) => {
-    const pointComponent = new TripPointView(point, this.#destinations, this.#offers);
-    const pointEditComponent = new PointEditingView(point, this.#destinations, this.#offers);
+    const pointComponent = new TripPointView(point);
+    const pointEditComponent = new PointEditingView(point);
 
     const replacePointToEditForm = () => {
       this.#waypointsList.element.replaceChild(pointEditComponent.element, pointComponent.element);

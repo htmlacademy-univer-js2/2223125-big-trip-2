@@ -49,13 +49,13 @@ export default class TripPointView {
     this.#waypoint = waypoint;
   }
 
-  getTemplate() {
+  get template() {
     return createTripPointTemplate(this.waypoint);
   }
 
-  getElement() {
+  get element() {
     if (!this.#element) {
-      this.#element = createElement(this.getTemplate());
+      this.#element = createElement(this.template);
     }
 
     return this.#element;
