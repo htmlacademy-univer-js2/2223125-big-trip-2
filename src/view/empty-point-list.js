@@ -1,15 +1,15 @@
 import { createElement } from '../presenter/render';
 
-const createTripEventListTemplate = () => (
-  '<ul class="trip-events__list">\
-  </ul>'
+const createEmptyListTemplate = () => (
+  /* eslint-disable */
+  `<p class="trip-events__msg">Click New Event to create your first point</p>`
 );
 
-export default class TripEventListView {
+export default class EmptyListView {
   #element = null;
 
   get template() {
-    return createTripEventListTemplate();
+    return createEmptyListTemplate();
   }
 
   get element() {

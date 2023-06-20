@@ -43,7 +43,7 @@ const destinationsList = [
   }
 ];
 
-const someOffer = offersList.find((offer) => offer.type === this.type).offers;
+const someOffer = () => ( offersList.find((offer) => offer.type === this.type).offers);
 const someDestination = destinationsList.find((destination) => destination.id === 1);
 
 export const generateWaypoint = () => ({

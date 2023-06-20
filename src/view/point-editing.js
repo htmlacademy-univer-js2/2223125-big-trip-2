@@ -138,13 +138,13 @@ export default class PointEditingView {
     this.#waypoint = waypoint;
   }
 
-  getTemplate() {
+  get template() {
     return createPointEditingTemplate(this.#waypoint);
   }
 
-  getElement() {
+  get element() {
     if (!this.#element) {
-      this.#element = createElement(this.getTemplate());
+      this.#element = createElement(this.template);
     }
 
     return this.#element;
