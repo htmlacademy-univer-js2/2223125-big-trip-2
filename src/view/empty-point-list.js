@@ -1,7 +1,7 @@
-import { createElement } from "../presenter/render";
+import { createElement } from '../presenter/render';
 
 const createEmptyListTemplate = () => (
-  `<p class="trip-events__msg">Click New Event to create your first point</p>`
+  `<p class='trip-events__msg'>Click New Event to create your first point</p>`
 );
 
 export default class EmptyListView {
@@ -13,7 +13,7 @@ export default class EmptyListView {
 
   get element() {
     if (!this.#element) {
-      this.#element = createElement(this.template)
+      this.#element = createElement(this.template);
     }
 
     return this.#element;
