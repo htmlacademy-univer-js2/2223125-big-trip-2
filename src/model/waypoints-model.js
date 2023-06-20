@@ -1,9 +1,5 @@
 export default class WaypointsModel {
-  #waypoints = null;
-
-  constructor() {
-    this.#waypoints = [];
-  }
+  #waypoints = [];
 
   init(waypoints) {
     this.#waypoints = waypoints;

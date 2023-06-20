@@ -1,4 +1,4 @@
-import { createElement } from '../presenter/render';
+import AbstractView from '../framework/view/abstract-view';
 import { humanizePointDueDate, calculateDuration, renderOffers, getDate, getTime } from '../utils/waypoints';
 
 const createTripPointTemplate = (waypoint) => {
@@ -41,11 +41,11 @@ const createTripPointTemplate = (waypoint) => {
   </li>`;
 };
 
-export default class TripPointView {
-  #element = null;
+export default class TripPointView extends AbstractView {
   #waypoint = null;
 
   constructor(waypoint) {
+    super();
     this.#waypoint = waypoint;
   }
 
@@ -53,15 +53,13 @@ export default class TripPointView {
     return createTripPointTemplate(this.waypoint);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
+  };
 }
