@@ -43,12 +43,13 @@ export default class PointPresenter {
       return;
     }
 
-    if (this.#mode === Mode.PREVIEW) {
-      replace(this.#previewComponent, previousPreviewComponent);
-    }
-
-    if (this.#mode === Mode.EDITING) {
-      replace(this.#editingComponent, previousEditingComponent);
+    switch (this.#mode) {
+      case Mode.PREVIEW:
+        replace(this.#previewComponent, previousPreviewComponent);
+        break;
+      case Mode.EDITING:
+        replace(this.#editingComponent, previousEditingComponent);
+        break;
     }
 
     remove(previousPreviewComponent);
@@ -62,6 +63,7 @@ export default class PointPresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.PREVIEW) {
+      this.#editingComponent.reset(this.#waypoint);
       this.#replaceEditingPointToPreviewPoint();
     }
   };
@@ -82,6 +84,7 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#editingComponent.reset(this.#waypoint);
       this.#replaceEditingPointToPreviewPoint();
     }
   };
@@ -96,6 +99,7 @@ export default class PointPresenter {
 
   #handlePreviewClick = (evt) => {
     evt.preventDefault();
+    this.#editingComponent.reset(this.#waypoint);
     this.#replaceEditingPointToPreviewPoint();
   };
 

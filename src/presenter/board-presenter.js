@@ -5,7 +5,7 @@ import EmptyListView from '../view/empty-point-list.js';
 import PointPresenter from './point-presenter.js';
 import { updateItem } from '../utils/waypoints.js';
 import { SortType } from '../const.js';
-import { sortPricePoint, sortDayPoint, sortTimePoint } from '../utils/waypoints.js';
+import { sorting } from '../utils/sort.js';
 
 
 export default class BoardPresenter {
@@ -18,7 +18,7 @@ export default class BoardPresenter {
   #pointsListComponent = new TripEventListView();
 
   #pointPresenter = new Map();
-  #currentSortType = null;
+  #currentSortType = SortType.DAY;
   #sourcedBoardPoints = [];
 
   constructor(tripContainer, waypointsModel) {
@@ -52,18 +52,7 @@ export default class BoardPresenter {
   };
 
   #sortPoint = (sortType) => {
-    switch (sortType) {
-      case SortType.DAY:
-        this.#boardPoints.sort(sortDayPoint);
-        break;
-      case SortType.TIME:
-        this.#boardPoints.sort(sortTimePoint);
-        break;
-      case SortType.PRICE:
-        this.#boardPoints.sort(sortPricePoint);
-        break;
-    }
-
+    sorting[sortType](this.#boardPoints);
     this.#currentSortType = sortType;
   };
 
@@ -78,7 +67,7 @@ export default class BoardPresenter {
   };
 
   #renderSort = () => {
-    this.#boardPoints.sort(sortDayPoint);
+    sorting[SortType.DAY](this.#boardPoints);
     render(this.#sortComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   };

@@ -58,15 +58,11 @@ const updateItem = (items, update) => {
   ];
 };
 
-const sortPricePoint = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
-
-const sortDayPoint = (pointA, pointB) => dayjs(pointA.dateFrom).diff(dayjs(pointB.dateFrom));
-
-const sortTimePoint = (pointA, pointB) => {
-  const timePointA = dayjs(pointA.dateTo).diff(dayjs(pointA.dateFrom));
-  const timePointB = dayjs(pointB.dateTo).diff(dayjs(pointB.dateFrom));
-  return timePointB - timePointA;
+const doCapitalizeString = (string) => {
+  const capFirstString = string[0].toUpperCase();
+  const restOfString = string.slice(1);
+  return capFirstString + restOfString;
 };
 
 export { generateWaypoints, humanizePointDueDate, calculateDuration, renderOffers, getDate, getTime,
-  isPointDatePast, isPointDateFuture, isPointDateFuturePast, updateItem, sortPricePoint, sortDayPoint, sortTimePoint};
+  isPointDatePast, isPointDateFuture, isPointDateFuturePast, updateItem, doCapitalizeString};
