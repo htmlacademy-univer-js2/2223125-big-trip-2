@@ -33,7 +33,7 @@ export default class NewPointButtonPresenter {
   };
 
   #handleNewPointButtonClick = () => {
-    this.#boardPresenter.createPoint(this.#handleNewPointFormClose);
+    this.#boardPresenter.createWaypoint(this.#handleNewPointFormClose);
     this.#newPointButtonComponent.element.disabled = true;
   };
 }

@@ -33,13 +33,13 @@ export default class PointPresenter {
     const previousPreviewComponent = this.#previewComponent;
     const previousEditingComponent =  this.#editingComponent;
 
-    this.#previewComponent = new TripPointView(waypoint);
-    this.#editingComponent = new WaypointView({
-      waypoint: waypoint,
-      destination: this.#destinations,
-      offers: this.#offers,
-      isNewPoint: true,
-    });
+    this.#previewComponent = new TripPointView(waypoint, this.#destinations, this.#offers);
+    this.#editingComponent = new WaypointView(
+      this.#destinations,
+      this.#offers,
+      true,
+      waypoint,
+    );
 
     this.#previewComponent.setEditClickHandler(this.#handleEditClick);
     this.#previewComponent.setFavoriteClickHandler(this.#handleFavoriteClick);

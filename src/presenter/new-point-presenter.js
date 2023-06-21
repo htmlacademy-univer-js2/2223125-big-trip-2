@@ -28,11 +28,11 @@ export default class NewPointPresenter {
     this.#destinations = [...this.#destinationsModel.destinations];
     this.#offers = [...this.#offersModel.offers];
 
-    this.#creatingWaypointComponent = new WaypointView({
-      destination: this.#destinations,
-      offers: this.#offers,
-      isNewPoint: true,
-    });
+    this.#creatingWaypointComponent = new WaypointView(
+      this.#destinations,
+      this.#offers,
+      true,
+    );
     this.#creatingWaypointComponent.setFormSubmitHandler(this.#handleFormSubmit);
     this.#creatingWaypointComponent.setResetClickHandler(this.#handleResetClick);
 
@@ -62,7 +62,7 @@ export default class NewPointPresenter {
   };
 
   setAborting = () => {
-    this.#creatingWaypointComponent.shake(this.#resetFormState);
+    // this.#creatingWaypointComponent.shake(this.#resetFormState);
   };
 
   #resetFormState = () => {

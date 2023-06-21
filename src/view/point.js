@@ -39,8 +39,8 @@ const renderOffers = (allOffers, checkedOffers, isDisabled) => allOffers.map((of
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${offer.price}</span>
     </label>
-  </div>`).join('')
-);
+  </div>`)
+).join('');
 
 const renderOffersContainer = (allOffers, checkedOffers, isDisabled) => {
   if (!allOffers || allOffers.offers.length === 0) {
@@ -91,8 +91,8 @@ const renderEditingPointTypeTemplate = (currentType, isDisabled) => Object.value
     <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio"
     name="event-type" value="${type}" ${currentType === type ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
     <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${PointTypeDescription[type]}</label>
-  </div>`).join('')
-);
+  </div>`)
+).join('');
 
 const renderResetButtonTemplate = (isNewPoint, isDisabled, isDeleting) => isNewPoint ? `<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>Cancel</button>` : `<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
   <button class="event__rollup-btn" type="button">`;
@@ -126,7 +126,7 @@ const createEditingPointTemplate = (waypoint, destinations, allOffers, isNewPoin
           <input class="event__input  event__input--destination" id="event-destination-${destination}" type="text"
           name="event-destination" value="${destinationData ? he.encode(destinationData.name) : ''}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
           <datalist id="destination-list-1">
-          ${renderDestinationNames(destination)}
+          ${renderDestinationNames(destinations)}
           </datalist>
         </div>
         ${renderEditingPointDateTemplate(startDate, endDate, isDisabled)}
@@ -160,7 +160,7 @@ export default class WaypointView extends AbstractStatefulView {
   #isNewPoint = null;
   #offersByType = null;
 
-  constructor(waypoint = BLANK_POINT, destination, offers, isNewPoint) {
+  constructor(destination, offers, isNewPoint, waypoint = BLANK_POINT) {
     super();
     this._state = WaypointView.parsePointToState(waypoint);
     this.#destination = destination;
@@ -288,7 +288,7 @@ export default class WaypointView extends AbstractStatefulView {
   #offersChangeHandler = (evt) => {
     evt.preventDefault();
     const offerId = Number(evt.target.id.slice(-1));
-    const offers = this._state.offerIds.filter((n) => n !== offerId);
+    const offers = this._state.offers.filter((n) => n !== offerId);
     let currentOffers = [...this._state.offers];
     if (offers.length !== this._state.offers.length) {
       currentOffers = offers;

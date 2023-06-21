@@ -19,21 +19,21 @@ const destinationsModel = new DestinationsModel(new DestinationsApiService(END_P
 const offersModel = new OffersModel(new OffersApiService(END_POINT, AUTHORIZATION));
 
 const filterModel = new FilterModel();
-const filterPresenter = new FilterPresenter({
-  filterContainer: document.querySelector('.trip-controls__filters'),
-  pointsModel: pointsModel,
-  filterModel: filterModel
-});
+const filterPresenter = new FilterPresenter(
+  document.querySelector('.trip-controls__filters'),
+  pointsModel,
+  filterModel
+);
 filterPresenter.init();
 
-const boardPresenter = new BoardPresenter({
-  tripContainer: document.querySelector('.trip-events'),
-  tripInfoContainer: document.querySelector('.trip-main__trip-info'),
-  pointsModel: pointsModel,
-  filterModel: filterModel,
-  destinationsModel: destinationsModel,
-  offersModel: offersModel
-});
+const boardPresenter = new BoardPresenter(
+  document.querySelector('.trip-events'),
+  document.querySelector('.trip-main__trip-info'),
+  pointsModel,
+  destinationsModel,
+  offersModel,
+  filterModel,
+);
 boardPresenter.init();
 
 const newPointButtonPresenter = new NewPointButtonPresenter({

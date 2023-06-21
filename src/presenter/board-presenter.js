@@ -42,12 +42,12 @@ export default class BoardPresenter {
     this.#destinationsModel =destinationsModel;
     this.#offersModel = offersModel;
     this.#filterModel = filterModel;
-    this.#newWaypointPresenter = new NewPointPresenter({
-      pointListContainer: this.#waypointsListComponent.element,
-      changeData: this.#handleViewAction,
-      destinationsModel: this.#destinationsModel,
-      offersModel: this.#offersModel
-    });
+    this.#newWaypointPresenter = new NewPointPresenter(
+      this.#waypointsListComponent.element,
+      this.#handleViewAction,
+      this.#destinationsModel,
+      this.#offersModel
+    );
 
     this.#waypointsModel.addObserver(this.#handleModelEvent);
     this.#destinationsModel.addObserver(this.#handleModelEvent);
@@ -157,22 +157,25 @@ export default class BoardPresenter {
 
   #renderTripInfo = () => {
     this.#tripInfoPresenter = new TripInfoPresenter(this.#tripInfoContainer, this.#destinationsModel, this.#offersModel);
-    const sortedPoints = sorting[SortType.DAY](this.points);
+    const sortedPoints = sorting[SortType.DAY](this.#waypointsModel.waypoints);
     this.#tripInfoPresenter.init(sortedPoints);
   };
 
-  #renderPoints = (waypoints) => {
-    const waypointPresenter = new PointPresenter({
-      pointListContainer: this.#waypointsListComponent.element,
-      pointsModel: this.#waypointsModel,
-      changeData: this.#handleViewAction,
-      changeMode: this.#handleModeChange,
-      destinationsModel: this.#destinationsModel,
-      offersModel: this.#offersModel
-    });
+  #renderPoint = (waypoint) => {
+    const waypointPresenter = new PointPresenter(
+      this.#waypointsListComponent.element,
+      this.#destinationsModel,
+      this.#offersModel,
+      this.#handleViewAction,
+      this.#handleModeChange,
+    );
 
-    waypointPresenter.init(waypoints);
-    this.#waypointPresenter.set(waypoints.id, waypointPresenter);
+    waypointPresenter.init(waypoint);
+    this.#waypointPresenter.set(waypoint.id, waypointPresenter);
+  };
+
+  #renderPoints = (waypoints) => {
+    waypoints.forEach((waypoint) => this.#renderPoint(waypoint));
   };
 
   #renderLoading = () => {
