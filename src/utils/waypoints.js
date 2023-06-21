@@ -21,16 +21,16 @@ const calculateDuration = (dateFrom, dateTo) => {
   return `${daysOutput} ${hoursOutput} ${minutesOutput}`;
 };
 
-const renderOffers = (offerList) => {
+const renderOffers = (allOffers, checkedOffers) => {
+  if (!allOffers) {
+    return '';
+  }
   let result = '';
-  offerList((offer) => {
-    result += `<li class="event__offer">
-    <span class="event__offer-title">${offer.title}</span>
-    &plus;&euro;&nbsp;
-    <span class="event__offer-price">${offer.price}</span>
-  </li>`;
+  allOffers.offers.forEach((offer) => {
+    if (checkedOffers.includes(offer.id)) {
+      result = `${result}<li class="event__offer"><span class="event__offer-title">${offer.title}</span>&plus;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span></li>`;
+    }
   });
-
   return result;
 };
 
@@ -44,15 +44,5 @@ const isPointDateFuture = (dateFrom) => dayjs().diff(dateFrom, 'minute') <= 0;
 
 const isPointDateFuturePast = (dateFrom, dateTo) => dayjs().diff(dateFrom, 'minute') > 0 && dayjs().diff(dateTo, 'minute') < 0;
 
-const capitalizeValue = (value) => {
-  if (value === false) {
-    return '';
-  }
-
-  const capFirstValue = value[0].toUpperCase();
-  const restOfValue = value.slice(1);
-  return capFirstValue + restOfValue;
-};
-
 export { generateWaypoints, humanizePointDueDate, calculateDuration, renderOffers, getDate, getTime,
-  isPointDatePast, isPointDateFuture, isPointDateFuturePast, capitalizeValue};
+  isPointDatePast, isPointDateFuture, isPointDateFuturePast};

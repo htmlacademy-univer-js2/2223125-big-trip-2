@@ -2,18 +2,21 @@ import AbstractView from '../framework/view/abstract-view';
 import { humanizePointDueDate, calculateDuration, renderOffers, getDate, getTime } from '../utils/waypoints';
 import he from 'he';
 
-const createTripPointTemplate = (waypoint) => {
+const createTripPointTemplate = (waypoint, destinations, allOffers) => {
   const {type, price, startDate, endDate, isFavorite, destination, offers} = waypoint;
+  const allPointTypeOffers = allOffers.find((offer) => offer.type === type);
   const dateFrom = humanizePointDueDate(startDate);
   const dateTo = humanizePointDueDate(endDate);
   const duration = calculateDuration(startDate, endDate);
+  const destinationData = destinations.find((item) => item.id === destination);
+
   return `<li class="trip-events__item">
     <div class="event">
       <time class="event__date" datetime="${getDate(startDate)}">${dateFrom}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
       </div>
-      <h3 class="event__title">${type} ${he.encode(destination.name)}</h3>
+      <h3 class="event__title">${type} ${destinationData ? he.encode(destinationData.name) : '' }</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${startDate}">${(dateFrom === dateTo) ? getTime(startDate) : dateFrom}</time>
@@ -27,7 +30,7 @@ const createTripPointTemplate = (waypoint) => {
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${renderOffers(offers)}
+        ${renderOffers(allPointTypeOffers, offers)}
       </ul>
       <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
         <span class="visually-hidden">Add to favorite</span>

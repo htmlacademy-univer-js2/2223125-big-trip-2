@@ -10,33 +10,33 @@ export default class FilterPresenter {
 
   #filterComponent = null;
 
-  constructor(filterContainer, filterModel, pointsModel) {
+  constructor(filterContainer, waypointsModel, filterModel) {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
-    this.#waypointsModel = pointsModel;
+    this.#waypointsModel = waypointsModel;
 
     this.#waypointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get filters() {
-    const points = this.#waypointsModel.points;
+    const waypoints = this.#waypointsModel.waypoints;
 
     return [
       {
         type: FilterType.EVERYTHING,
         name: 'EVERYTHING',
-        count: filter[FilterType.EVERYTHING](points).length,
+        count: filter[FilterType.EVERYTHING](waypoints).length,
       },
       {
         type: FilterType.PAST,
         name: 'PAST',
-        count: filter[FilterType.PAST](points).length,
+        count: filter[FilterType.PAST](waypoints).length,
       },
       {
         type: FilterType.FUTURE,
         name: 'FUTURE',
-        count: filter[FilterType.FUTURE](points).length,
+        count: filter[FilterType.FUTURE](waypoints).length,
       },
     ];
   }
