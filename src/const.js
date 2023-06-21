@@ -1,3 +1,6 @@
+const AUTHORIZATION = 'Basic hIfpbpd204fpubd6';
+const END_POINT = 'https://18.ecmascript.pages.academy/big-trip';
+
 const SORT_TYPES_DISABLED = ['event', 'offer'];
 
 const SortType = {
@@ -66,7 +69,15 @@ const PointTypeDescription = {
 
 const ApiServiceResponseMethod = {
   GET: 'GET',
-  PUT: 'PUT'
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
-export { SORT_TYPES_DISABLED, SortType, FilterType, UserAction, UpdateType, Mode, SortTypeDescription, PointType, PointTypeDescription, ApiServiceResponseMethod };
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
+export { SORT_TYPES_DISABLED, SortType, FilterType, UserAction, UpdateType, Mode, SortTypeDescription,
+  PointType, PointTypeDescription, ApiServiceResponseMethod, AUTHORIZATION, END_POINT, TimeLimit };

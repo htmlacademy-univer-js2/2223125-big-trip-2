@@ -25,17 +25,17 @@ export default class FilterPresenter {
     return [
       {
         type: FilterType.EVERYTHING,
-        name: 'EVERYTHING',
+        name: FilterType.EVERYTHING,
         count: filter[FilterType.EVERYTHING](waypoints).length,
       },
       {
         type: FilterType.PAST,
-        name: 'PAST',
+        name: FilterType.PAST,
         count: filter[FilterType.PAST](waypoints).length,
       },
       {
         type: FilterType.FUTURE,
-        name: 'FUTURE',
+        name: FilterType.FUTURE,
         count: filter[FilterType.FUTURE](waypoints).length,
       },
     ];

@@ -7,7 +7,6 @@ export default class PointPresenter {
   #waypointsListContainer = null;
   #previewComponent = null;
   #editingComponent = null;
-  #waypointsModel = null;
   #destinationsModel = null;
   #offersModel = null;
   #waypoint = null;
@@ -18,9 +17,8 @@ export default class PointPresenter {
   #changeMode = null;
   #mode = Mode.PREVIEW;
 
-  constructor(waypointsListContainer, waypointsModel, destinationsModel, offersModel, changeData, changeMode) {
+  constructor(waypointsListContainer, destinationsModel, offersModel, changeData, changeMode) {
     this.#waypointsListContainer = waypointsListContainer;
-    this.#waypointsModel = waypointsModel;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#changeData = changeData;
@@ -59,7 +57,8 @@ export default class PointPresenter {
         replace(this.#previewComponent, previousPreviewComponent);
         break;
       case Mode.EDITING:
-        replace(this.#editingComponent, previousEditingComponent);
+        replace(this.#previewComponent, previousEditingComponent);
+        this.#mode = Mode.PREVIEW;
         break;
     }
 
@@ -78,6 +77,42 @@ export default class PointPresenter {
       this.#replaceEditingPointToPreviewPoint();
     }
   };
+
+  setSaving = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#editingComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  };
+
+  setDeleting = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#editingComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  };
+
+  setAborting = () => {
+    if (this.#mode === Mode.PREVIEW) {
+      this.#editingComponent.shake();
+      return;
+    }
+
+    this.#editingComponent.shake(this.#resetFormState);
+  };
+
+  #resetFormState = () => {
+    this.#editingComponent.updateElement({
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
+  };
+
 
   #replacePreviewPointToEditingPoint = () => {
     replace(this.#editingComponent, this.#previewComponent);
@@ -122,7 +157,6 @@ export default class PointPresenter {
       UpdateType.MINOR,
       waypoint,
     );
-    this.#replaceEditingPointToPreviewPoint();
   };
 
   #handleResetClick = (waypoint) => {

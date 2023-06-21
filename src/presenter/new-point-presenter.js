@@ -1,6 +1,5 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
 import WaypointView from '../view/point.js';
-import {nanoid} from 'nanoid';
 import { UserAction, UpdateType } from '../const.js';
 
 export default class NewPointPresenter {
@@ -8,16 +7,14 @@ export default class NewPointPresenter {
   #creatingWaypointComponent = null;
   #changeData = null;
   #destroyCallback = null;
-  #waypointsModel = null;
   #destinationsModel = null;
   #offersModel = null;
   #destinations = null;
   #offers = null;
 
-  constructor(waypointListContainer, changeData, waypointsModel, destinationsModel, offersModel) {
+  constructor(waypointListContainer, changeData, destinationsModel, offersModel) {
     this.#waypointListContainer = waypointListContainer;
     this.#changeData = changeData;
-    this.#waypointsModel = waypointsModel;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
   }
@@ -57,6 +54,25 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
+  setSaving = () => {
+    this.#creatingWaypointComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  };
+
+  setAborting = () => {
+    this.#creatingWaypointComponent.shake(this.#resetFormState);
+  };
+
+  #resetFormState = () => {
+    this.#creatingWaypointComponent.updateElement({
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
+  };
+
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
@@ -72,8 +88,7 @@ export default class NewPointPresenter {
     this.#changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(), ...point},
+      point,
     );
-    this.destroy();
   };
 }
