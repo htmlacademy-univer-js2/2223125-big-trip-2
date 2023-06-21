@@ -6,4 +6,6 @@ const SortType = {
   OFFER: 'offer',
 };
 
-export { SortType };
+const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+
+export { SortType, POINT_TYPES };
