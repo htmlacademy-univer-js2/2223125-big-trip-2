@@ -47,14 +47,18 @@ const createTripPointTemplate = (waypoint, destinations, allOffers) => {
 
 export default class TripPointView extends AbstractView {
   #waypoint = null;
+  #destinations = null;
+  #offers = null;
 
-  constructor(waypoint) {
+  constructor(waypoint, destinations, offers) {
     super();
     this.#waypoint = waypoint;
+    this.#destinations = destinations;
+    this.#offers = offers;
   }
 
   get template() {
-    return createTripPointTemplate(this.waypoint);
+    return createTripPointTemplate(this.#waypoint, this.#destinations, this.#offers);
   }
 
   setEditClickHandler = (callback) => {
