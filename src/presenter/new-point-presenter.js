@@ -1,55 +1,58 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
-import PointEditingView from '../view/point-editing.js';
+import WaypointView from '../view/point.js';
 import {nanoid} from 'nanoid';
 import { UserAction, UpdateType } from '../const.js';
 
 export default class NewPointPresenter {
   #waypointListContainer = null;
-  #editingPointComponent = null;
+  #creatingWaypointComponent = null;
   #changeData = null;
   #destroyCallback = null;
   #waypointsModel = null;
+  #destinationsModel = null;
+  #offersModel = null;
   #destinations = null;
   #offers = null;
-  #isNewPoint = true;
 
-  constructor(waypointListContainer, changeData, waypointsModel) {
+  constructor(waypointListContainer, changeData, waypointsModel, destinationsModel, offersModel) {
     this.#waypointListContainer = waypointListContainer;
     this.#changeData = changeData;
     this.#waypointsModel = waypointsModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
   }
 
   init = (callback) => {
     this.#destroyCallback = callback;
 
-    if (this.#editingPointComponent !== null) {
+    if (this.#creatingWaypointComponent !== null) {
       return;
     }
-    this.#destinations = [...this.#waypointsModel.destinations];
-    this.#offers = [...this.#waypointsModel.offers];
+    this.#destinations = [...this.#destinationsModel.destinations];
+    this.#offers = [...this.#offersModel.offers];
 
-    this.#editingPointComponent = new PointEditingView({
+    this.#creatingWaypointComponent = new WaypointView({
       destination: this.#destinations,
       offers: this.#offers,
-      isNewPoint: this.#isNewPoint
+      isNewPoint: true,
     });
-    this.#editingPointComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#editingPointComponent.setDeleteClickHandler(this.#handleDeleteClick);
+    this.#creatingWaypointComponent.setFormSubmitHandler(this.#handleFormSubmit);
+    this.#creatingWaypointComponent.setResetClickHandler(this.#handleResetClick);
 
-    render(this.#editingPointComponent, this.#waypointListContainer, RenderPosition.AFTERBEGIN);
+    render(this.#creatingWaypointComponent, this.#waypointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   };
 
   destroy = () => {
-    if (this.#editingPointComponent === null) {
+    if (this.#creatingWaypointComponent === null) {
       return;
     }
 
     this.#destroyCallback?.();
 
-    remove(this.#editingPointComponent);
-    this.#editingPointComponent = null;
+    remove(this.#creatingWaypointComponent);
+    this.#creatingWaypointComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
@@ -61,7 +64,7 @@ export default class NewPointPresenter {
     }
   };
 
-  #handleDeleteClick = () => {
+  #handleResetClick = () => {
     this.destroy();
   };
 

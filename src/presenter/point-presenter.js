@@ -1,6 +1,6 @@
 import { render, replace, remove } from '../framework/render';
 import TripPointView from '../view/trip-point';
-import PointEditingView from '../view/point-editing';
+import WaypointView from '../view/point.js';
 import { UserAction, UpdateType, Mode } from '../const';
 
 export default class PointPresenter {
@@ -8,36 +8,46 @@ export default class PointPresenter {
   #previewComponent = null;
   #editingComponent = null;
   #waypointsModel = null;
+  #destinationsModel = null;
+  #offersModel = null;
   #waypoint = null;
+  #destinations = null;
+  #offers = null;
 
   #changeData = null;
   #changeMode = null;
   #mode = Mode.PREVIEW;
-  #isNewPoint = false;
 
-  constructor(waypointsListContainer, waypointsModel, changeData, changeMode) {
+  constructor(waypointsListContainer, waypointsModel, destinationsModel, offersModel, changeData, changeMode) {
     this.#waypointsListContainer = waypointsListContainer;
     this.#waypointsModel = waypointsModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
   }
 
   init(waypoint) {
     this.#waypoint = waypoint;
+    this.#destinations = [...this.#destinationsModel.destinations];
+    this.#offers = [...this.#offersModel.offers];
+
     const previousPreviewComponent = this.#previewComponent;
     const previousEditingComponent =  this.#editingComponent;
 
     this.#previewComponent = new TripPointView(waypoint);
-    this.#editingComponent = new PointEditingView({
+    this.#editingComponent = new WaypointView({
       waypoint: waypoint,
-      isNewPoint: this.#isNewPoint,
+      destination: this.#destinations,
+      offers: this.#offers,
+      isNewPoint: true,
     });
 
     this.#previewComponent.setEditClickHandler(this.#handleEditClick);
     this.#previewComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#editingComponent.setPreviewClickHandler(this.#handlePreviewClick);
     this.#editingComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#editingComponent.setDeleteClickHandler(this.#handleDeleteClick);
+    this.#editingComponent.setResetClickHandler(this.#handleResetClick);
 
     if (previousPreviewComponent === null || previousEditingComponent === null) {
       render(this.#previewComponent, this.#waypointsListContainer);
@@ -115,7 +125,7 @@ export default class PointPresenter {
     this.#replaceEditingPointToPreviewPoint();
   };
 
-  #handleDeleteClick = (waypoint) => {
+  #handleResetClick = (waypoint) => {
     this.#changeData(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,

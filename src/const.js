@@ -1,3 +1,5 @@
+const SORT_TYPES_DISABLED = ['event', 'offer'];
+
 const SortType = {
   DAY: 'day',
   EVENT: 'event',
@@ -22,6 +24,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 const Mode = {
@@ -29,6 +32,41 @@ const Mode = {
   EDITING: 'editing',
 };
 
-const POINT_TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const SortTypeDescription = {
+  [SortType.DAY]: 'Day',
+  [SortType.EVENT]: 'Event',
+  [SortType.TIME]: 'Time',
+  [SortType.PRICE]: 'Price',
+  [SortType.OFFER]: 'Offer',
+};
 
-export { SortType, FilterType, UserAction, UpdateType, Mode, POINT_TYPES };
+const PointType = {
+  TAXI: 'taxi',
+  BUS: 'bus',
+  TRAIN: 'train',
+  SHIP: 'ship',
+  DRIVE: 'drive',
+  FLIGHT: 'flight',
+  CHECK_IN: 'check-in',
+  SIGHTSEEING: 'sightseeing',
+  RESTAURANT: 'restaurant'
+};
+
+const PointTypeDescription = {
+  [PointType.TAXI]: 'Taxi',
+  [PointType.BUS]: 'Bus',
+  [PointType.TRAIN]: 'Train',
+  [PointType.SHIP]: 'Ship',
+  [PointType.DRIVE]: 'Drive',
+  [PointType.FLIGHT]: 'Flight',
+  [PointType.CHECK_IN]: 'Check-in',
+  [PointType.SIGHTSEEING]: 'Sightseeing',
+  [PointType.RESTAURANT]: 'Restaurant'
+};
+
+const ApiServiceResponseMethod = {
+  GET: 'GET',
+  PUT: 'PUT'
+};
+
+export { SORT_TYPES_DISABLED, SortType, FilterType, UserAction, UpdateType, Mode, SortTypeDescription, PointType, PointTypeDescription, ApiServiceResponseMethod };
