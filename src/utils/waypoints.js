@@ -38,31 +38,21 @@ const getDate = (date) => dayjs(date).format('YYYY-MM-DD');
 
 const getTime = (date) => dayjs(date).format('hh:mm');
 
-const isPointDatePast = (date) => dayjs().diff(date, 'day') > 0;
+const isPointDatePast = (dateTo) => dayjs().diff(dateTo, 'minute') > 0;
 
-const isPointDateFuture = (date) => date.diff(dayjs(), 'day') >= 0;
+const isPointDateFuture = (dateFrom) => dayjs().diff(dateFrom, 'minute') <= 0;
 
-const isPointDateFuturePast = (dateFrom, dateTo) => dayjs().diff(dateFrom, 'day') > 0 && dateTo.diff(dayjs(), 'day') > 0;
+const isPointDateFuturePast = (dateFrom, dateTo) => dayjs().diff(dateFrom, 'minute') > 0 && dayjs().diff(dateTo, 'minute') < 0;
 
-const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
+const capitalizeValue = (value) => {
+  if (value === false) {
+    return '';
   }
 
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1),
-  ];
-};
-
-const doCapitalizeString = (string) => {
-  const capFirstString = string[0].toUpperCase();
-  const restOfString = string.slice(1);
-  return capFirstString + restOfString;
+  const capFirstValue = value[0].toUpperCase();
+  const restOfValue = value.slice(1);
+  return capFirstValue + restOfValue;
 };
 
 export { generateWaypoints, humanizePointDueDate, calculateDuration, renderOffers, getDate, getTime,
-  isPointDatePast, isPointDateFuture, isPointDateFuturePast, updateItem, doCapitalizeString};
+  isPointDatePast, isPointDateFuture, isPointDateFuturePast, capitalizeValue};
