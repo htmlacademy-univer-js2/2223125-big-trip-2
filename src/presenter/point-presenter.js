@@ -1,11 +1,7 @@
 import { render, replace, remove } from '../framework/render';
 import TripPointView from '../view/trip-point';
 import PointEditingView from '../view/point-editing';
-
-const Mode = {
-  PREVIEW: 'preview',
-  EDITING: 'editing',
-};
+import { UserAction, UpdateType, Mode } from '../const';
 
 export default class PointPresenter {
   #waypointsListContainer = null;
@@ -17,6 +13,7 @@ export default class PointPresenter {
   #changeData = null;
   #changeMode = null;
   #mode = Mode.PREVIEW;
+  #isNewPoint = false;
 
   constructor(waypointsListContainer, waypointsModel, changeData, changeMode) {
     this.#waypointsListContainer = waypointsListContainer;
@@ -31,12 +28,16 @@ export default class PointPresenter {
     const previousEditingComponent =  this.#editingComponent;
 
     this.#previewComponent = new TripPointView(waypoint);
-    this.#editingComponent = new PointEditingView(waypoint);
+    this.#editingComponent = new PointEditingView({
+      waypoint: waypoint,
+      isNewPoint: this.#isNewPoint,
+    });
 
     this.#previewComponent.setEditClickHandler(this.#handleEditClick);
     this.#previewComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#editingComponent.setPreviewClickHandler(this.#handlePreviewClick);
     this.#editingComponent.setFormSubmitHandler(this.#handleFormSubmit);
+    this.#editingComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
     if (previousPreviewComponent === null || previousEditingComponent === null) {
       render(this.#previewComponent, this.#waypointsListContainer);
@@ -84,13 +85,16 @@ export default class PointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
-      this.#editingComponent.reset(this.#waypoint);
-      this.#replaceEditingPointToPreviewPoint();
+      this.resetView();
     }
   };
 
   #handleFavoriteClick = () => {
-    this.#changeData({...this.#waypoint, isFavorite: !this.#waypoint.isFavorite});
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this.#waypoint, isFavorite: !this.#waypoint.isFavorite},
+    );
   };
 
   #handleEditClick = () => {
@@ -99,12 +103,23 @@ export default class PointPresenter {
 
   #handlePreviewClick = (evt) => {
     evt.preventDefault();
-    this.#editingComponent.reset(this.#waypoint);
+    this.resetView();
+  };
+
+  #handleFormSubmit = (waypoint) => {
+    this.#changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      waypoint,
+    );
     this.#replaceEditingPointToPreviewPoint();
   };
 
-  #handleFormSubmit = (point) => {
-    this.#changeData(point);
-    this.#replaceEditingPointToPreviewPoint();
+  #handleDeleteClick = (waypoint) => {
+    this.#changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      waypoint,
+    );
   };
 }
