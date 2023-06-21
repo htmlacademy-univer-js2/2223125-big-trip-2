@@ -1,18 +1,16 @@
 import MenuView from './view/menu.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import BoardPresenter from './presenter/board-presenter.js';
+import NewPointButtonPresenter from './presenter/new-point-button-presenter.js';
 import WaypointsModel from './model/waypoints-model';
 import FilterModel from './model/filter-model.js';
-import NewPointButtonView from './view/new-point-button.js';
 import { RenderPosition, render } from './framework/render.js';
 import DestinationsModel from './model/destinations-model.js';
 import OffersModel from './model/offers-model.js';
 import PointsApiService from './api/points.js';
 import DestinationsApiService from './api/destinations.js';
 import OffersApiService from './api/offers.js';
-
-const AUTHORIZATION = 'Basic hIfpbpd204fpubd6';
-const END_POINT = 'https://18.ecmascript.pages.academy/big-trip';
+import { END_POINT, AUTHORIZATION } from './const.js';
 
 const menuElement = document.querySelector('.trip-controls__navigation');
 
@@ -30,6 +28,7 @@ filterPresenter.init();
 
 const boardPresenter = new BoardPresenter({
   tripContainer: document.querySelector('.trip-events'),
+  tripInfoContainer: document.querySelector('.trip-main__trip-info'),
   pointsModel: pointsModel,
   filterModel: filterModel,
   destinationsModel: destinationsModel,
@@ -37,22 +36,19 @@ const boardPresenter = new BoardPresenter({
 });
 boardPresenter.init();
 
-const newPointButtonComponent = new NewPointButtonView();
+const newPointButtonPresenter = new NewPointButtonPresenter({
+  newPointButtonContainer: document.querySelector('.trip-main'),
+  destinationsModel: destinationsModel,
+  offersModel: offersModel,
+  boardPresenter: boardPresenter
+});
 
-const handleNewPointFormClose = () => {
-  newPointButtonComponent.element.disabled = false;
-};
-
-const handleNewPointButtonClick = () => {
-  boardPresenter.createPoint(handleNewPointFormClose);
-  newPointButtonComponent.element.disabled = true;
-};
+newPointButtonPresenter.init();
 
 offersModel.init().finally(() => {
   destinationsModel.init().finally(() => {
     pointsModel.init().finally(() => {
-      render(newPointButtonComponent, document.querySelector('.trip-main'));
-      newPointButtonComponent.setClickHandler(handleNewPointButtonClick);
+      newPointButtonPresenter.renderNewPointButton();
     });
   });
 });
